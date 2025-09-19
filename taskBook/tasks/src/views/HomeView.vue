@@ -7,28 +7,33 @@
       {{ task.text }}
       <button @click="completeTask(index)">Complete</button>
       <button @click="deleteTask(index)">Delete</button>
+      <button @click="editTask(index)">Edit</button>
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useTasksStore } from '@/stores/tasks'
 
-interface Task {
-  text: string
-  completed: boolean
-}
+// реактивная переменная для привязки к инпуту
 const newTaskText = ref('')
-const tasks = ref<Task[]>([])
+// реактивная переменная с типом интерфейса Task
+const taskStore = useTasksStore()
+
+const { tasks } = storeToRefs(taskStore)
 
 const addTask = () => {
-  if (newTaskText.value.trim()) {
-    tasks.value.push({
-      text: newTaskText.value,
-      completed: false,
-    })
-    newTaskText.value = ''
-  }
+  // trim - удаляет пробелы в начале и конце строки
+  taskStore.add(newTaskText.value)
+  // очищаем инпут
+  newTaskText.value = ''
+}
+
+const editTask = (index: number) => {
+  tasks.value[index].text = newTaskText.value
+  newTaskText.value = ''
 }
 
 const deleteTask = (index: number) => {
@@ -39,3 +44,5 @@ const completeTask = (index: number) => {
   tasks.value[index].completed = !tasks.value[index].completed
 }
 </script>
+
+<style scoped></style>
