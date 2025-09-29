@@ -7,6 +7,18 @@ const router = createRouter({
       name: "main",
       path: "/main",
       component: () => import("@/views/MainView.vue"),
+      children: [
+        {
+          name: "sales",
+          path: "sales",
+          component: () => import("@/views/MainSalesView.vue"),
+        },
+        {
+          name: "catalog",
+          path: "catalog",
+          component: () => import("@/views/MainCatalogView.vue"),
+        },
+      ],
     },
     {
       name: "settings",
